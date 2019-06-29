@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class TaskController extends AbstractController
 {
@@ -46,6 +47,7 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
+     * @Security("user === task.getUser() || is_granted('ROLE_ADMIN')")
      */
     public function editAction(Task $task, Request $request, EntityManagerInterface $manager)
     {
@@ -69,6 +71,7 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
+     * @Security("user === task.getUser() || is_granted('ROLE_ADMIN')")
      */
     public function toggleTaskAction(Task $task, EntityManagerInterface $manager)
     {
@@ -82,6 +85,7 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     * @Security("user === task.getUser() || is_granted('ROLE_ADMIN')")
      */
     public function deleteTaskAction(Task $task, EntityManagerInterface $manager)
     {
