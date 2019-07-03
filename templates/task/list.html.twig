@@ -5,9 +5,9 @@
 {% block body %}
     <div class="row">
         <div class="col-md-12">
-            {% if not tasks %}
+            {% if tasks|length == 0 %}
                 <div class="alert alert-warning" role="alert">
-                    Il n'y a pas encore de tâche enregistrée. <a href="{{ path('task_create') }}" class="btn btn-warning pull-right">Créer une tâche</a>
+                    <span class="no-task">Il n'y a pas encore de tâche enregistrée. </span><a href="{{ path('task_create') }}" class="btn btn-warning no-task-button pull-right">Créer une tâche</a></span>
                 </div>
             {% else %}
                 <div class="col-md-12">
