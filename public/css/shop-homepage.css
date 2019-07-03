@@ -21,6 +21,14 @@ body {
     margin-right: 1%;
 }
 
+.buttons-task {
+    margin-left: 1%;
+}
+
+.btn-home {
+    margin-right: 1.5%;
+}
+
 .no-user {
     line-height: 2.2;
 }

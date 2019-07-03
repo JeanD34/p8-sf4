@@ -46,10 +46,14 @@
 
                     {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
                         <a href="{{ path('user_list') }}" class="btn btn-primary">Liste des utilisateurs</a>
-                    {% endif %}
+                    {% endif %}                               
 
                     {% if app.user %}
                         <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
+                    {% endif %}
+
+                    {% if 'homepage' != app.request.attributes.get('_route') and 'app_login' != app.request.attributes.get('_route') %}
+                        <a href="{{ path('homepage') }}" class="pull-right btn btn-success btn-home">Accueil</a>
                     {% endif %}
 
                     {% if not app.user and 'app_login' != app.request.attributes.get('_route') %}
