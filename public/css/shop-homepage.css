@@ -5,7 +5,24 @@
  */
 
 body {
-    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    padding-top: 70px;
+    /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+
+.no-task {
+    line-height: 2.2;
+}
+
+.no-task-button {
+    line-height: 1.2;
+}
+
+.no-user {
+    line-height: 2.2;
+}
+
+.no-user-button {
+    line-height: 1.2;
 }
 
 .slide-image {
