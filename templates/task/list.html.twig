@@ -6,16 +6,21 @@
     <div class="row">
         <div class="col-md-12">
             {% if tasks|length == 0 %}
-                <div class="alert alert-warning" role="alert">
-                    <span class="no-task">Il n'y a pas encore de tâche enregistrée. </span><a href="{{ path('task_create') }}" class="btn btn-warning no-task-button pull-right">Créer une tâche</a></span>
-                </div>
+                {% if 'task_list_done' != app.request.attributes.get('_route') %}
+                    <div class="alert alert-warning" role="alert">
+                        <span class="no-task">Il n'y a pas encore de tâche enregistrée. </span><a href="{{ path('task_create') }}" class="btn btn-warning no-task-button pull-right">Créer une tâche</a>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning" role="alert">
+                        <span class="no-task">Il n'y a pas encore de tâche terminée. </span><a href="{{ path('task_list') }}" class="btn btn-info no-task-button pull-right">Consulter la liste des tâches à faire</a><a href="{{ path('task_create') }}" class="btn btn-warning no-task-button pull-right no-task-m">Créer une tâche</a>
+                    </div>
+                {% endif %}
             {% else %}
-                <div class="col-md-12">
-                    <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
-                </div>
+                <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
             {% endif %}
         </div>
     </div>
+    <br>
     <div class="row">
         {% for task in tasks %}
             <div class="col-sm-4 col-lg-4 col-md-4">
@@ -33,13 +38,11 @@
                     </div>
                     <div>
                         <form action="{{ path('task_toggle', {'id' : task.id }) }}">
-                            <button class="btn btn-success btn-sm pull-right">
-                                {% if not task.isDone %}
-                                    Marquer comme faite
-                                {% else %}
-                                    Marquer non terminée
-                                {% endif %}
-                            </button>
+                            {% if not task.isDone %}
+                                <button class="btn btn-success btn-sm pull-right">Marquer comme faite</button>
+                            {% else %}
+                                <button class="btn btn-primary btn-sm pull-right">Marquer non terminée</button>
+                            {% endif %}                         
                         </form>
                         <form action="{{ path('task_edit', {'id' : task.id }) }}">
                             <button class="btn btn-warning btn-sm pull-right">Editer</button>

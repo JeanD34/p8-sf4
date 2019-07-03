@@ -17,6 +17,10 @@ body {
     line-height: 1.2;
 }
 
+.no-task-m {
+    margin-right: 1%;
+}
+
 .no-user {
     line-height: 2.2;
 }
