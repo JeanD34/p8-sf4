@@ -18,7 +18,7 @@ class TaskController extends AbstractController
      */
     public function listAction(TaskRepository $taskRepository)
     {
-        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => false])]);
+        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => false, 'user' => [$this->getUser(), null]])]);
     }
 
     /**
@@ -26,7 +26,7 @@ class TaskController extends AbstractController
      */
     public function listDoneAction(TaskRepository $taskRepository)
     {
-        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => true])]);
+        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => true, 'user' => [$this->getUser(), null]])]);
     }
 
     /**
