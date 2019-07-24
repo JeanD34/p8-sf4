@@ -3,11 +3,13 @@ security:
     encoders:
         App\Entity\User:
             algorithm: auto
+
     providers:
-        app_user_provider:
+       app_user_provider:
             entity:
                 class: App\Entity\User
                 property: username
+        # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -16,7 +18,7 @@ security:
             anonymous: true
             logout:
                 path:   /logout
-                target: /
+                target: /login
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
