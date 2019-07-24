@@ -18,7 +18,7 @@ class TaskController extends AbstractController
      */
     public function listAction(TaskRepository $taskRepository)
     {
-        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => false, 'user' => [$this->getUser(), null]])]);
+        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => false])]);
     }
 
     /**
@@ -26,7 +26,7 @@ class TaskController extends AbstractController
      */
     public function listDoneAction(TaskRepository $taskRepository)
     {
-        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => true, 'user' => [$this->getUser(), null]])]);
+        return $this->render('task/list.html.twig', ['tasks' => $taskRepository->findBy(['isDone' => true])]);
     }
 
     /**
@@ -55,7 +55,6 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
-     * @Security("user === task.getUser() || is_granted('ROLE_ADMIN')")
      */
     public function editAction(Task $task, Request $request, EntityManagerInterface $manager)
     {
@@ -79,7 +78,6 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
-     * @Security("user === task.getUser() || is_granted('ROLE_ADMIN')")
      */
     public function toggleTaskAction(Task $task, EntityManagerInterface $manager)
     {
@@ -93,7 +91,7 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
-     * @Security("user === task.getUser() || is_granted('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN') || user === task.getUser()")
      */
     public function deleteTaskAction(Task $task, EntityManagerInterface $manager)
     {

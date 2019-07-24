@@ -25,17 +25,24 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 25,
+     *      minMessage = "Votre nom d'utilisateur doit contenir au moins {{ limit }} caractères de long",
+     *      maxMessage = "Votre nom d'utilisateur ne peut pas contenir plus que {{ limit }} caractères"
+     * )
      * @Assert\NotBlank(message="Vous devez saisir un nom d'utilisateur.")
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $password;
-
-    /**
-     * @ORM\Column(type="string", length=60, unique=true)
+     * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 180,
+     *      minMessage = "Votre adresse email doit contenir au moins {{ limit }} caractères de long",
+     *      maxMessage = "Votre adresse email ne peut pas contenir plus que {{ limit }} caractères"
+     * )
      * @Assert\NotBlank(message="Vous devez saisir une adresse email.")
      * @Assert\Email(message="Le format de l'adresse n'est pas correcte.")
      */
@@ -47,6 +54,25 @@ class User implements UserInterface
     private $roles = [];
 
     /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="Vous devez saisir un mot de passe.")
+     * @Assert\Length(
+     *      min = 8,
+     *      max = 255,
+     *      minMessage = "Votre mot de passe doit contenir au moins {{ limit }} caractères.",
+     *      maxMessage = "Votre mot de passe ne peut pas contenir plus que {{ limit }} caractères !"
+     * )
+     * @Assert\Regex(
+     *     pattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)^",
+     *     message = "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère spécial !"
+     * )
+     * @Assert\NotCompromisedPassword
+     * @see https://symfony.com/blog/new-in-symfony-4-3-compromised-password-validator
+     */
+    private $password;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="user")
      */
     private $tasks;
@@ -56,14 +82,31 @@ class User implements UserInterface
         $this->tasks = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUsername()
+    public function getEmail(): ?string
     {
-        return $this->username;
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->username;
     }
 
     public function setUsername($username)
@@ -71,30 +114,15 @@ class User implements UserInterface
         $this->username = $username;
     }
 
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    public function setPassword($password)
-    {
-        $this->password = $password;
-    }
-
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
-
-    public function getRoles(): ?array
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
         $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
 
@@ -105,11 +133,37 @@ class User implements UserInterface
         return $this;
     }
 
-    public function eraseCredentials()
-    { }
+    /**
+     * @see UserInterface
+     */
+    public function getPassword(): string
+    {
+        return (string) $this->password;
+    }
 
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
     public function getSalt()
-    { }
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
 
     /**
      * @return Collection|Task[]
