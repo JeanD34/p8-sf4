@@ -61,8 +61,7 @@ body {
 }
 
 .caption {
-    height: 130px;
-    overflow: hidden;
+    min-height: 130px;
 }
 
 .caption h4 {
