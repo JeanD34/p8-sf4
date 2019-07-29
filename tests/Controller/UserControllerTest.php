@@ -44,8 +44,8 @@ class UserControllerTest extends Utils
         $form = $crawler->selectButton('Ajouter')->form();
 
         $form['user[username]'] = 'UserTest';
-        $form['user[password][first]'] = 'UserTest';
-        $form['user[password][second]'] = 'UserTest';
+        $form['user[password][first]'] = 'UserTest34!';
+        $form['user[password][second]'] = 'UserTest34!';
         $form['user[email]'] = 'user-test@gmail.com';
         $form['user[roles]']->select('ROLE_USER');
 
@@ -91,8 +91,8 @@ class UserControllerTest extends Utils
         $form = $crawler->selectButton('Modifier')->form();
 
         $form['user[username]'] = 'UserUpdate';
-        $form['user[password][first]'] = 'User';
-        $form['user[password][second]'] = 'User';
+        $form['user[password][first]'] = 'User340!';
+        $form['user[password][second]'] = 'User340!';
         $form['user[email]'] = 'user-update@gmail.com';
         $form['user[roles]']->select('ROLE_USER');
 
