@@ -41,6 +41,16 @@ body {
     width: 100%;
 }
 
+.img-fluid {
+    max-width: 100%;
+    height: 250px;
+    margin-bottom: 3rem;
+}
+
+.img-fluid.errors {
+    height: 200px;
+}
+
 .carousel-holder {
     margin-bottom: 30px;
 }
@@ -80,4 +90,10 @@ body {
 
 footer {
     margin: 50px 0;
+}
+
+.error-message {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
 }

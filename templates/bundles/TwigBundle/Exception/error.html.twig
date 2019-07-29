@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block header_img %}
+    <div class="row text-center">
+        <div class="col-2">
+            <img class="img-fluid errors" src="{{ asset('img/errors.png') }}" alt="Accès refusé">
+        </div>       
+    </div>
+{% endblock %}
+
+{% block body %}
+    <!-- Start Error / Redirection -->
+    <div class="row text-center">         
+        <div class="mb-5 text-center">
+            <p class="error-message">Désolé, une erreur est survenue.</p>
+            <a href="{{ path('homepage') }}" class="btn btn-success btn-home">Retour à l'accueil</a>
+        </div>
+    </div>
+    <!-- End Error / Redirection -->
+{% endblock %}
