@@ -34,7 +34,8 @@
                             {% endif %}
                         </h4>
                         <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
-                        <p>{{ task.content }}</p>
+                        <p><small><u>{{ task.user.username }}</u> le {{ task.createdAt| date('d/m/Y à H:i:s') }}</small></p>
+                        <p>{{ task.content }}</p>                      
                     </div>
                     <div>
                         <form action="{{ path('task_toggle', {'id' : task.id }) }}">
