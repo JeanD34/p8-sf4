@@ -42,6 +42,7 @@ class EditUserVoter extends Voter
         // array_unique remove duplicate value
         // array_flip to have keys becoming values (Values become numbers so ROLE have numerical value and can be compare)
         // Example : "ROLE_USER" => 0, "ROLE_ADMIN" => 1
+        $roles = array_flip(array_unique(array_merge($value, $key)));
 
         switch ($attribute) {
             case 'EDIT':
