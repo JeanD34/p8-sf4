@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class UserController extends AbstractController
 {
@@ -49,16 +50,17 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
+     * @Security("is_granted('EDIT', userToEdit)")
      */
-    public function editAction(User $user, Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager)
+    public function editAction(User $userToEdit, Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager)
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $userToEdit);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
+            $password = $encoder->encodePassword($userToEdit, $userToEdit->getPassword());
+            $userToEdit->setPassword($password);
 
             $manager->flush();
 
@@ -67,6 +69,6 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_list');
         }
 
-        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $userToEdit]);
     }
 }
