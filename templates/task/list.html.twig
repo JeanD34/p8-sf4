@@ -33,9 +33,10 @@
                                 <span class="glyphicon glyphicon-remove"></span>
                             {% endif %}
                         </h4>
-                        <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
+                        <h4><a href="{{ path('task_show', {'id' : task.id }) }}">{{ task.title }}</a></h4>
                         <p><small><u>{{ task.user.username }}</u> le {{ task.createdAt| date('d/m/Y à H:i:s') }}</small></p>
-                        <p>{{ task.content }}</p>                      
+                        {% set consult = " <a href=tasks/" ~ task.id ~ "/show>...</a>" %}
+                        <p>{{ task.content|length > 50 ? task.content|slice(0, 50) : task.content }}{{ task.content|length > 50 ? consult|raw }}</p>                      
                     </div>
                     <div>
                         <form action="{{ path('task_toggle', {'id' : task.id }) }}">
@@ -49,7 +50,10 @@
                             <button class="btn btn-warning btn-sm pull-right buttons-task">Editer</button>
                         </form>
                         <form action="{{ path('task_delete', {'id' : task.id }) }}">
-                            <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
+                            <button class="btn btn-danger btn-sm pull-right buttons-task">Supprimer</button>
+                        </form>
+                        <form action="{{ path('task_show', {'id' : task.id }) }}">
+                            <button class="btn btn-info btn-sm pull-right">Consulter</button>
                         </form>
                     </div>
                 </div>

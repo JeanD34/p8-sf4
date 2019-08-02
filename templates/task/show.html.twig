@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block header_img %}<img class="slide-image" src="{{ asset('img/todolist_content.jpg') }}" alt="todo list">{% endblock %}
+
+{% block body %}
+    <div class="class-show">
+        <p><b>Titre</b></p>
+        <p><small>{{ task.title}}</small></p>
+        <p><b>Contenu</b></p>
+        <p><small>{{ task.content}}</small></p>
+    </div>
+    
+    <hr>
+
+    <a href="{{ path('task_list') }}" class="btn btn-primary ">Retour à la liste des tâches</a>
+{% endblock %}
