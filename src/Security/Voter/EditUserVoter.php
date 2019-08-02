@@ -9,8 +9,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class EditUserVoter extends Voter
 {
-
-
     protected function supports($attribute, $subject)
     {
         return in_array($attribute, ['EDIT'])
