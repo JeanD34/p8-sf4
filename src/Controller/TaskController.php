@@ -30,7 +30,11 @@ class TaskController extends AbstractController
     }
 
     /**
+     * Task creation
      * @Route("/tasks/create", name="task_create")
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return void
      */
     public function createAction(Request $request, EntityManagerInterface $manager)
     {

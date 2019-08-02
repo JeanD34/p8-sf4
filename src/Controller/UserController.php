@@ -11,6 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class UserController extends AbstractController
 {
@@ -70,5 +71,17 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $userToEdit]);
+    }
+
+    /**
+     * @Route("/users/{id}/delete", name="user_delete")
+     * @IsGranted("ROLE_SUPER_ADMIN")
+     */
+    public function deleteAction(EntityManagerInterface $manager, User $user)
+    {
+        $manager->remove($user);
+        $manager->flush();
+        $this->addFlash('success', 'L\'utilisateur a bien été supprimé');
+        return $this->redirectToRoute('user_list');
     }
 }
