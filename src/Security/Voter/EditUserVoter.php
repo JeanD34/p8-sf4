@@ -30,21 +30,24 @@ class EditUserVoter extends Voter
             return false;
         }
 
-        // Get the array of roles
-        $roles =  $this->container->getParameter('security.role_hierarchy.roles');
+        // Get array with all the availables roles
+        $roleHierarchy =  $this->container->getParameter('security.role_hierarchy.roles');
 
-        // Get an array of value
-        $value = array_values($roles);
+        // Create an increasing array of roles
+        $roles = [];
+        foreach ($roleHierarchy as $key => $value) {
+            foreach ($value as $key => $childRole) {
+                $roles[] = $childRole;
+            }
+        }
+        foreach ($roleHierarchy as $parentRole => $value) {
+            $roles[] = $parentRole;
+        }
 
-        // Get an array of key
-        $key = array_keys($roles);
-
-        // Merge the two arrays 
         // array_unique remove duplicate value
-        // array_flip to have keys becoming values (Values become numbers so ROLE have numerical value and can be compare)
+        // array_flip to have keys becoming values in the array (Values become numbers so ROLE have numerical value and can be compare)
         // Example : "ROLE_USER" => 0, "ROLE_ADMIN" => 1
-        $roles = array_flip(array_unique(array_merge($value, $key)));
-
+        $roles = array_flip(array_unique($roles));
 
         switch ($attribute) {
             case 'EDIT':
