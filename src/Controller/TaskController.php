@@ -103,7 +103,7 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
-     * @Security("is_granted('ROLE_ADMIN') || user === task.getUser()")
+     * @Security("is_granted('DELETE', task)")
      */
     public function deleteTaskAction(Task $task, EntityManagerInterface $manager)
     {
