@@ -61,7 +61,7 @@ body {
 }
 
 .caption {
-    min-height: 130px;
+    min-height: 140px;
 }
 
 .caption h4 {
@@ -99,4 +99,8 @@ footer {
 
 .class-show {
     margin-bottom: 2rem;
+}
+
+.inline-form {
+    display: inline-block;
 }
