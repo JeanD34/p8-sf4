@@ -17,6 +17,9 @@
         <!-- Custom CSS -->
         <link href="{{ asset('css/shop-homepage.css') }}" rel="stylesheet">
 
+        <!-- Custom Media Queries / Responsive -->
+        <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -46,19 +49,14 @@
 
                     {% if is_granted('ROLE_ADMIN') %}
                         <a href="{{ path('user_list') }}" class="btn btn-primary">Liste des utilisateurs</a>
-                    {% endif %}                               
+                    {% endif %}  
 
                     {% if app.user %}
-                        <a href="{{ path('logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
+                        <a href="{{ path('logout') }}" class="btn btn-danger pull-right">Se déconnecter</a>
                     {% endif %}
-
                     {% if 'homepage' != app.request.attributes.get('_route') and 'app_login' != app.request.attributes.get('_route') %}
-                        <a href="{{ path('homepage') }}" class="pull-right btn btn-success btn-home">Accueil</a>
-                    {% endif %}
-
-                    {% if not app.user and 'app_login' != app.request.attributes.get('_route') %}
-                        <a href="{{ path('app_login') }}" class="btn btn-success">Se connecter</a>
-                    {% endif %}
+                        <a href="{{ path('homepage') }}" class="btn btn-success btn-home pull-right">Accueil</a>
+                    {% endif %}                                                              
                 </div>
             </div>
             <br>

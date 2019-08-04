@@ -1,0 +1,6 @@
+@media(max-width:767px) {
+    .row>.col-md-12>.pull-right {
+        float: none !important;
+        margin-top: 1rem;
+    }
+}
