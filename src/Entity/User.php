@@ -50,6 +50,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json")
+     * @Assert\NotBlank(message="Vous devez choisir un rôle pour l'utilisateur.")
      */
     private $roles = [];
 
@@ -120,8 +121,9 @@ class User implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+
+        // guarantee every user at least has ROLE_USER in first place in role array
+        array_unshift($roles, 'ROLE_USER');
 
         return array_unique($roles);
     }

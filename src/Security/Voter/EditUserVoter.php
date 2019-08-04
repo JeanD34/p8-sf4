@@ -5,15 +5,15 @@ namespace App\Security\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Psr\Container\ContainerInterface;
+use App\Services\RoleHelper;
 
 class EditUserVoter extends Voter
 {
-    private $container;
+    private $roleHelper;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(RoleHelper $roleHelper)
     {
-        $this->container = $container;
+        $this->roleHelper = $roleHelper;
     }
 
     protected function supports($attribute, $subject)
@@ -30,35 +30,12 @@ class EditUserVoter extends Voter
             return false;
         }
 
-        // Get array with all the availables roles
-        $roleHierarchy =  $this->container->getParameter('security.role_hierarchy.roles');
-
-        // Create an increasing array of roles
-        $roles = [];
-        foreach ($roleHierarchy as $key => $value) {
-            foreach ($value as $key => $childRole) {
-                $roles[] = $childRole;
-            }
-        }
-        foreach ($roleHierarchy as $parentRole => $value) {
-            $roles[] = $parentRole;
-        }
-
-        // array_unique remove duplicate value
-        // array_flip to have keys becoming values in the array (Values become numbers so ROLE have numerical value and can be compare)
-        // Example : "ROLE_USER" => 0, "ROLE_ADMIN" => 1
-        $roles = array_flip(array_unique($roles));
-
         switch ($attribute) {
             case 'EDIT':
                 if ($user === $subject) {
                     return true;
                 }
-                // Example with the two users being Admin
-                // $roles[$user->getRoles()[0]] = $roles["ROLE_ADMIN"] = 1 (See line 44)
-                // $roles[$subject->getRoles()[0]] = $roles["ROLE_ADMIN"] = 1 (See line 44)
-                // Return false an user can only edit user with inferior ROLE
-                return $roles[$user->getRoles()[0]] > $roles[$subject->getRoles()[0]];
+                return $this->roleHelper->roleInferior($user->getRoles(), $subject->getRoles());
                 break;
         }
 
