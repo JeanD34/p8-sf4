@@ -28,8 +28,11 @@ class UserControllerTest extends Utils
         // Asserting User
         $tds = $crawler->filter('td')->extract(['_text']);
         static::assertContains('Admin', $tds);
-        static::assertContains('UserAnon', $tds);
         static::assertContains('User', $tds);
+
+        // Assert not contains other admin
+        static::assertNotContains('UserAnon', $tds);
+        static::assertNotContains('SuperAdmin', $tds);
     }
 
     public function testCreateAction()
@@ -47,7 +50,7 @@ class UserControllerTest extends Utils
         $form['user[password][first]'] = 'UserTest34!';
         $form['user[password][second]'] = 'UserTest34!';
         $form['user[email]'] = 'user-test@gmail.com';
-        $form['user[roles]']->select('ROLE_USER');
+        $form['user[roles][0]']->select('ROLE_USER');
 
         $crawler = $this->client->submit($form);
         static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -84,7 +87,7 @@ class UserControllerTest extends Utils
         $crawler = $this::createAdminClient();
 
         // Go to the edit user page
-        $crawler = $this->client->request('GET', '/users/3/edit');
+        $crawler = $this->client->request('GET', '/users/4/edit');
         static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         // Edit the user with form
@@ -94,7 +97,7 @@ class UserControllerTest extends Utils
         $form['user[password][first]'] = 'User340!';
         $form['user[password][second]'] = 'User340!';
         $form['user[email]'] = 'user-update@gmail.com';
-        $form['user[roles]']->select('ROLE_USER');
+        $form['user[roles][0]']->select('ROLE_USER');
 
         $crawler = $this->client->submit($form);
         static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -144,6 +147,23 @@ class UserControllerTest extends Utils
         // Remove user from task, assert user is null now
         $user->removeTask($task);
         static::assertNull($task->getUser());
+    }
+
+    public function testDeleteActionUser()
+    {
+        $crawler = $this::createSuperAdminClient();
+
+        // Go to list of user
+        $crawler = $this->client->request('GET', '/users');
+        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        // Delete an user
+        $crawler = $this->client->request('GET', '/users/4/delete');
+        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        // Assert flash message is displayed
+        $alert = $crawler->filter('div.alert')->text();
+        static::assertSame('Superbe ! L\'utilisateur a bien été supprimé', trim($alert));
     }
 
     protected function tearDown()

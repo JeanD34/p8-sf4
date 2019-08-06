@@ -75,11 +75,11 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users/{id}/delete", name="user_delete")
-     * @IsGranted("ROLE_SUPER_ADMIN")
+     * @Security("is_granted('DELETE', userToDelete)")
      */
-    public function deleteAction(EntityManagerInterface $manager, User $user)
+    public function deleteAction(EntityManagerInterface $manager, User $userToDelete)
     {
-        $manager->remove($user);
+        $manager->remove($userToDelete);
         $manager->flush();
         $this->addFlash('success', 'L\'utilisateur a bien été supprimé');
         return $this->redirectToRoute('user_list');

@@ -28,7 +28,7 @@
                             <td>{{ user.email }}</td>
                             <td>
                                 <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Editer</a>
-                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                {% if is_granted('DELETE', user) %}
                                     <a href="{{ path('user_delete', {'id' : user.id}) }}" class="btn btn-danger btn-sm">Supprimer</a>
                                 {% endif %}
                             </td>
