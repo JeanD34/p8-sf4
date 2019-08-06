@@ -121,6 +121,9 @@ class UserControllerTest extends Utils
         static::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
+    /**
+     * Test of unused (Symfony native) function of User Entity
+     */
     public function testUserEntityFunction()
     {
         // Get the user from DB

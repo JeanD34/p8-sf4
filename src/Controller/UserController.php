@@ -11,12 +11,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class UserController extends AbstractController
 {
     /**
+     * List of all users
+     * 
      * @Route("/users", name="user_list")
+     *
+     * @param UserRepository $userRepository
+     * 
+     * @return Response
      */
     public function listAction(UserRepository $userRepository)
     {
@@ -24,7 +29,15 @@ class UserController extends AbstractController
     }
 
     /**
+     * User creation
+     *
      * @Route("/users/create", name="user_create")
+     * 
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param UserPasswordEncoderInterface $encoder
+     * 
+     * @return Response
      */
     public function createAction(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
     {
@@ -50,8 +63,17 @@ class UserController extends AbstractController
     }
 
     /**
+     * User edition
+     *
      * @Route("/users/{id}/edit", name="user_edit")
      * @Security("is_granted('EDIT', userToEdit)")
+     * 
+     * @param User $userToEdit
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @param EntityManagerInterface $manager
+     * 
+     * @return Response
      */
     public function editAction(User $userToEdit, Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager)
     {
@@ -74,8 +96,15 @@ class UserController extends AbstractController
     }
 
     /**
+     * User deletion
+     * 
      * @Route("/users/{id}/delete", name="user_delete")
      * @Security("is_granted('DELETE', userToDelete)")
+     * 
+     * @param EntityManagerInterface $manager
+     * @param User $userToDelete
+     * 
+     * @return Response
      */
     public function deleteAction(EntityManagerInterface $manager, User $userToDelete)
     {

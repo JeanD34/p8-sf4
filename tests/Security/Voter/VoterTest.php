@@ -14,6 +14,9 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 class VoterTest extends Utils
 {
+    /**
+     * Verify that anonymous user cannot edit Task
+     */
     public function testDeleteTaskVoter()
     {
         $container = new Container;
@@ -29,6 +32,9 @@ class VoterTest extends Utils
         $this->assertSame(-1, $voter->vote($token, $task, ['DELETE']));
     }
 
+    /**
+     * Verify that anonymous user cannot edit User
+     */
     public function testUserVoter()
     {
         $container = new Container;
