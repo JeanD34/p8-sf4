@@ -14,15 +14,13 @@ class UserControllerTest extends Utils
         parent::setUp();
     }
 
-    // Test symfony constraints on add/edit ?
-
     public function testListAction()
     {
         $crawler = $this::createAdminClient();
 
         // Go to users page
         $crawler = $this->client->request('GET', '/users');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
         static::assertRouteSame('user_list');
 
         // Asserting User
@@ -41,7 +39,7 @@ class UserControllerTest extends Utils
 
         // Go to user creation page
         $crawler = $this->client->request('GET', '/users/create');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Add user with form
         $form = $crawler->selectButton('Ajouter')->form();
@@ -53,11 +51,10 @@ class UserControllerTest extends Utils
         $form['user[roles][0]']->select('ROLE_USER');
 
         $crawler = $this->client->submit($form);
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert flash message is displayed
-        $alert = $crawler->filter('div.alert')->text();
-        static::assertSame('Superbe ! L\'utilisateur a bien été ajouté.', trim($alert));
+        static::assertSelectorTextSame('div.alert', 'Superbe ! L\'utilisateur a bien été ajouté.');
 
         // Assert that the new user is in the list
         $tds = $crawler->filter('td')->extract(['_text']);
@@ -69,8 +66,6 @@ class UserControllerTest extends Utils
         static::assertSame('UserTest', $user->getUsername());
         static::assertSame('user-test@gmail.com', $user->getEmail());
         static::assertSame(array('ROLE_USER'), $user->getRoles());
-
-        // Tester contraintes
     }
 
     public function testCreateActionRoleUser()
@@ -79,16 +74,16 @@ class UserControllerTest extends Utils
 
         // Go to user creation page, assert that is forbidden
         $crawler = $this->client->request('GET', '/users/create');
-        static::assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        static::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
-    public function testEditAction()
+    public function testEditUserAction()
     {
         $crawler = $this::createAdminClient();
 
         // Go to the edit user page
         $crawler = $this->client->request('GET', '/users/4/edit');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Edit the user with form
         $form = $crawler->selectButton('Modifier')->form();
@@ -100,11 +95,10 @@ class UserControllerTest extends Utils
         $form['user[roles][0]']->select('ROLE_USER');
 
         $crawler = $this->client->submit($form);
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert flash message is displayed
-        $alert = $crawler->filter('div.alert')->text();
-        static::assertSame('Superbe ! L\'utilisateur a bien été modifié', trim($alert));
+        static::assertSelectorTextSame('div.alert', 'Superbe ! L\'utilisateur a bien été modifié');
 
         // Assert that the edited user is in the list
         $tds = $crawler->filter('td')->extract(['_text']);
@@ -116,8 +110,6 @@ class UserControllerTest extends Utils
         static::assertSame('UserUpdate', $user->getUsername());
         static::assertSame('user-update@gmail.com', $user->getEmail());
         static::assertSame(array('ROLE_USER'), $user->getRoles());
-
-        // Tester contraintes (unique, blank...)
     }
 
     public function testEditActionRoleUser()
@@ -126,7 +118,7 @@ class UserControllerTest extends Utils
 
         // Go to user edition page, assert that is forbidden
         $crawler = $this->client->request('GET', '/users/3/edit');
-        static::assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        static::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     public function testUserEntityFunction()
@@ -155,15 +147,21 @@ class UserControllerTest extends Utils
 
         // Go to list of user
         $crawler = $this->client->request('GET', '/users');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Delete an user
         $crawler = $this->client->request('GET', '/users/4/delete');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert flash message is displayed
-        $alert = $crawler->filter('div.alert')->text();
-        static::assertSame('Superbe ! L\'utilisateur a bien été supprimé', trim($alert));
+        static::assertSelectorTextSame('div.alert', 'Superbe ! L\'utilisateur a bien été supprimé');
+    }
+
+    public function testAccessUserPageWhenNotConnected()
+    {
+        // Go to edit form of an user being not authenticated
+        $this->client->request('GET', '/users/3/edit');
+        static::assertResponseRedirects('/login');
     }
 
     protected function tearDown()
