@@ -76,6 +76,23 @@ class Utils extends WebTestCase
         return $crawler;
     }
 
+    // Log in with ROLE_SUPER_ADMIN
+    protected function createSuperAdminClient()
+    {
+        $this->client->followRedirects();
+
+        $crawler = $this->client->request('GET', '/login');
+
+        $crawler = $this->client->submitForm('Se connecter', [
+            'username' => 'SuperAdmin',
+            'password' => 'SuperAdmin34!'
+        ]);
+        static::assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        return $crawler;
+    }
+
+
     protected function tearDown()
     {
         self::runCommand('doctrine:database:drop --force');

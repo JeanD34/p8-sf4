@@ -65,6 +65,19 @@ class TaskControllerTest extends Utils
         static::assertContains('Tâche_4', $links);
     }
 
+    public function testShowAction()
+    {
+        $crawler = $this::createUserClient();
+
+        // Go to show task page
+        $crawler = $this->client->request('GET', '/tasks/1/show');
+        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+
+        // Assert it's "Tâche 1"
+        $taskTitle = $crawler->filter('small')->text();
+        static::assertSame('Tâche_1', $taskTitle);
+    }
+
     public function testCreateTask()
     {
         $crawler = $this::createUserClient();
@@ -315,10 +328,10 @@ class TaskControllerTest extends Utils
     public function testTaskEntityFunction()
     {
         // Get task from DB
-        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['title' => 'Tâche_Admin_1', 'user' => 1]);
+        $task = $this->entityManager->getRepository(Task::class)->findOneBy(['title' => 'Tâche_Admin_1', 'user' => 2]);
 
         // Get user from DB
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['id' => 1]);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['id' => 2]);
 
         // Assert that getCreatedAt return an instance of datetime
         static::assertInstanceOf(DateTime::class, $task->getCreatedAt());

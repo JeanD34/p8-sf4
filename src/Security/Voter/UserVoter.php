@@ -6,19 +6,22 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use App\Services\RoleHelper;
+use Symfony\Component\Security\Core\Security;
 
-class EditUserVoter extends Voter
+class UserVoter extends Voter
 {
     private $roleHelper;
+    private $security;
 
-    public function __construct(RoleHelper $roleHelper)
+    public function __construct(RoleHelper $roleHelper, Security $security)
     {
         $this->roleHelper = $roleHelper;
+        $this->security = $security;
     }
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, ['EDIT'])
+        return in_array($attribute, ['EDIT', 'DELETE'])
             && $subject instanceof \App\Entity\User;
     }
 
@@ -36,6 +39,11 @@ class EditUserVoter extends Voter
                     return true;
                 }
                 return $this->roleHelper->roleInferior($user->getRoles(), $subject->getRoles());
+                break;
+            case 'DELETE':
+                if ($user !== $subject && $this->security->isGranted('ROLE_SUPER_ADMIN')) {
+                    return true;
+                }
                 break;
         }
 
