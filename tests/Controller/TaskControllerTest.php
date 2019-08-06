@@ -15,15 +15,13 @@ class TaskControllerTest extends Utils
         parent::setUp();
     }
 
-    // Test symfony constraints on add/edit ?
-
     public function testListActionWithRoute()
     {
         $crawler = $this::createUserClient();
 
         // Go to task list
         $crawler = $this->client->request('GET', '/tasks');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
         static::assertRouteSame('task_list');
 
         // Assert there are tasks
@@ -38,12 +36,12 @@ class TaskControllerTest extends Utils
 
         // Go to task creation page
         $crawler = $this->client->request('GET', '/tasks/create');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Click on back to task list button
         $link = $crawler->selectLink('Retour à la liste des tâches')->link();
         $crawler = $this->client->click($link);
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert there are tasks
         $links = $crawler->filter('a')->extract(['_text']);
@@ -57,7 +55,7 @@ class TaskControllerTest extends Utils
 
         // Go to done task list
         $crawler = $this->client->request('GET', '/tasks/done');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert there are tasks
         $links = $crawler->filter('a')->extract(['_text']);
@@ -71,11 +69,10 @@ class TaskControllerTest extends Utils
 
         // Go to show task page
         $crawler = $this->client->request('GET', '/tasks/1/show');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert it's "Tâche 1"
-        $taskTitle = $crawler->filter('small')->text();
-        static::assertSame('Tâche_1', $taskTitle);
+        static::assertSelectorTextSame('small', 'Tâche_1');
     }
 
     public function testCreateTask()
@@ -91,7 +88,7 @@ class TaskControllerTest extends Utils
         $form['task[content]'] = 'Tâche de Test';
 
         $crawler = $this->client->submit($form);
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert task is in DB and contains what we expect
         $addedTask = $this->entityManager->getRepository(Task::class)->findOneBy(['title' => 'Tâche_Test']);
@@ -99,8 +96,7 @@ class TaskControllerTest extends Utils
         static::assertSame('Tâche de Test', $addedTask->getContent());
 
         // Assert flash message is displayed
-        $alert = $crawler->filter('div.alert')->text();
-        static::assertSame('Superbe ! La tâche a été bien été ajoutée.', trim($alert));
+        static::assertSelectorTextSame('div.alert', 'Superbe ! La tâche a été bien été ajoutée.');
 
         // Assert the task in now in the list
         $links = $crawler->filter('a')->extract(['_text']);
@@ -127,11 +123,10 @@ class TaskControllerTest extends Utils
         $form['task[content]'] = 'Tâche Unique Entity Test';
 
         $crawler = $this->client->submit($form);
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert error message
-        $error = $crawler->filter('span.form-error-message')->text();
-        static::assertSame('Cette valeur est déjà utilisée.', trim($error));
+        static::assertSelectorTextSame('span.form-error-message', 'Cette valeur est déjà utilisée.');
 
         // Assert that there is still only one task with this title in DB
         $tasks = $this->entityManager->getRepository(Task::class)->findBy(['title' => $task->getTitle()]);
@@ -144,7 +139,7 @@ class TaskControllerTest extends Utils
 
         // Go to the edition page of the task id = 1
         $crawler = $this->client->request('GET', '/tasks/1/edit');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Edit the task with form
         $form = $crawler->selectButton('Modifier')->form();
@@ -153,7 +148,7 @@ class TaskControllerTest extends Utils
         $form['task[content]'] = 'Tâche Edition Test';
 
         $crawler = $this->client->submit($form);
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert task is in DB and contains what we expect
         $editedTask = $this->entityManager->getRepository(Task::class)->findOneBy(['title' => 'Tâche_Edition_Test']);
@@ -161,8 +156,7 @@ class TaskControllerTest extends Utils
         static::assertSame('Tâche Edition Test', $editedTask->getContent());
 
         // Assert flash message is displayed
-        $alert = $crawler->filter('div.alert')->text();
-        static::assertSame('Superbe ! La tâche a bien été modifiée.', trim($alert));
+        static::assertSelectorTextSame('div.alert', 'Superbe ! La tâche a bien été modifiée.');
 
         // Assert the bounded user is still the good one
         $user = $editedTask->getUser();
@@ -186,11 +180,10 @@ class TaskControllerTest extends Utils
         $form['task[content]'] = 'Tâche Unique Entity Test';
 
         $crawler = $this->client->submit($form);
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert error message
-        $error = $crawler->filter('span.form-error-message')->text();
-        static::assertSame('Cette valeur est déjà utilisée.', trim($error));
+        static::assertSelectorTextSame('span.form-error-message', 'Cette valeur est déjà utilisée.');
 
         // Assert that there is still only one task with this title in DB
         $tasks = $this->entityManager->getRepository(Task::class)->findBy(['title' => $task->getTitle()]);
@@ -215,15 +208,14 @@ class TaskControllerTest extends Utils
 
         // Mark as done
         $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/toggle');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert flash message is displayed
-        $alert = $crawler->filter('div.alert')->text();
-        static::assertSame('Superbe ! La tâche ' . $task->getTitle() . ' a bien été marquée comme faite.', trim($alert));
+        static::assertSelectorTextSame('div.alert', 'Superbe ! La tâche ' . $task->getTitle() . ' a bien été marquée comme faite.');
 
         // Go to done task list
         $crawler = $this->client->request('GET', '/tasks/done');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert that Tâche_1 is now in done task list
         $links = $crawler->filter('a')->extract(['_text']);
@@ -246,7 +238,7 @@ class TaskControllerTest extends Utils
 
         // Test deleting task with user != task.user (denied)
         $crawler = $this->client->request('GET', '/tasks/1/delete');
-        static::assertSame(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode());
+        static::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
 
         // Assert task 11 exist in DB
         $task = $this->entityManager->getRepository(Task::class)->findOneBy(['id' => 11]);
@@ -254,7 +246,7 @@ class TaskControllerTest extends Utils
 
         // Go to done task list
         $crawler = $this->client->request('GET', '/tasks/done');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert that task is in done task list
         $links = $crawler->filter('a')->extract(['_text']);
@@ -265,15 +257,14 @@ class TaskControllerTest extends Utils
 
         // Assert user can delete his own tasks
         $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/delete');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert flash message is displayed
-        $alert = $crawler->filter('div.alert')->text();
-        static::assertSame('Superbe ! La tâche a bien été supprimée.', trim($alert));
+        static::assertSelectorTextSame('div.alert', 'Superbe ! La tâche a bien été supprimée.');
 
         // Go to done task list
         $crawler = $this->client->request('GET', '/tasks/done');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert that task is no longer in done task list
         $links = $crawler->filter('a')->extract(['_text']);
@@ -306,15 +297,14 @@ class TaskControllerTest extends Utils
 
         // Assert Admin can delete tasks that he's not the owner
         $crawler = $this->client->request('GET', '/tasks/' . $task->getId() . '/delete');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert flash message is displayed
-        $alert = $crawler->filter('div.alert')->text();
-        static::assertSame('Superbe ! La tâche a bien été supprimée.', trim($alert));
+        static::assertSelectorTextSame('div.alert', 'Superbe ! La tâche a bien été supprimée.');
 
         // Go to task list
         $crawler = $this->client->request('GET', '/tasks');
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        static::assertResponseIsSuccessful();
 
         // Assert that task is no longer in task list
         $links = $crawler->filter('a')->extract(['_text']);
@@ -341,6 +331,25 @@ class TaskControllerTest extends Utils
 
         // Assert that getIsDone return false
         static::assertFalse($task->getIsDone());
+    }
+
+    public function testAccessTaskEditionWhenNotConnected()
+    {
+        // Go to edit form of an user being not authenticated
+        $this->client->request('GET', '/tasks/1/edit');
+        static::assertResponseRedirects('/login');
+    }
+
+    public function testAccessTaskDeletionSuperAdmin()
+    {
+        $crawler = $this::createSuperAdminClient();
+
+        // Go to edit form of an user being not authenticated
+        $crawler = $this->client->request('GET', '/tasks/1/delete');
+        static::assertResponseIsSuccessful();
+
+        // Assert flash message is displayed
+        static::assertSelectorTextSame('div.alert', 'Superbe ! La tâche a bien été supprimée.');
     }
 
     protected function tearDown()

@@ -31,12 +31,12 @@ class SecurityControllerTest extends Utils
         static::assertContains('Créer un utilisateur', $links);
         static::assertContains('Liste des utilisateurs', $links);
 
-        // Assert link "Créer un utilisateur" exist and it redirects to the good route
+        // Assert link "Créer un utilisateur" exist and href content is OK
         $createUserLink = $crawler->selectLink('Créer un utilisateur')->link();
         $uriCreateUser = $createUserLink->getUri();
         static::assertContains('/users/create', $uriCreateUser);
 
-        // Assert link "Liste des utilisateurs" exist and it redirects to the good route
+        // Assert link "Liste des utilisateurs" exist and and href content is OK
         $listUserLink = $crawler->selectLink('Liste des utilisateurs')->link();
         $uriListUser = $listUserLink->getUri();
         static::assertContains('/users', $uriListUser);
@@ -55,9 +55,8 @@ class SecurityControllerTest extends Utils
         ]);
 
         // Assert that flash message is displayed
-        $alert = $crawler->filter('div.alert')->text();
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        static::assertSame("Identifiants invalides.", $alert);
+        static::assertResponseIsSuccessful();
+        static::assertSelectorTextSame('div.alert', "Identifiants invalides.");
     }
 
     public function testUsernameNotFoundMessage()
@@ -73,9 +72,8 @@ class SecurityControllerTest extends Utils
         ]);
 
         // Assert that flash message is displayed
-        $alert = $crawler->filter('div.alert')->text();
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        static::assertSame("Le nom d'utilisateur n'a pas pu être trouvé.", $alert);
+        static::assertResponseIsSuccessful();
+        static::assertSelectorTextSame('div.alert', "Le nom d'utilisateur n'a pas pu être trouvé.");
     }
 
     public function testLogoutUsingLink()
@@ -87,9 +85,8 @@ class SecurityControllerTest extends Utils
         $crawler = $this->client->click($link);
 
         // Assert that we are back to the login page with the button "Se connecter"
-        $button = trim($crawler->filter('button')->text());
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        static::assertSame('Se connecter', $button);
+        static::assertResponseIsSuccessful();
+        static::assertSelectorTextSame('button', 'Se connecter');
 
         static::assertRouteSame('app_login');
     }
@@ -102,9 +99,8 @@ class SecurityControllerTest extends Utils
         $crawler = $this->client->request('GET', '/logout');
 
         // Assert that we are back to the login page with the button "Se connecter"
-        $button = trim($crawler->filter('button')->text());
-        static::assertSame(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
-        static::assertSame('Se connecter', $button);
+        static::assertResponseIsSuccessful();
+        static::assertSelectorTextSame('button', 'Se connecter');
 
         static::assertRouteSame('app_login');
     }
