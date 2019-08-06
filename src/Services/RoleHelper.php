@@ -13,7 +13,14 @@ class RoleHelper
         $this->container = $container;
     }
 
-    public function roleInferior($currentUserRole, $userToEditRole)
+    /**
+     * Return true if current user role is superior to the user he wants to edit
+     *
+     * @param array $currentUserRole An array with roles of the current user
+     * @param array $userToEditRole An array with roles of the user to edit
+     * @return void
+     */
+    public function roleSuperior($currentUserRole, $userToEditRole)
     {
 
         $roles = $this->getAllRoles();
@@ -27,6 +34,11 @@ class RoleHelper
         return $roles[end($currentUserRole)] > $roles[end($userToEditRole)];
     }
 
+    /**
+     * Get all roles, formatted in an array
+     *
+     * @return void
+     */
     public function getAllRoles()
     {
 

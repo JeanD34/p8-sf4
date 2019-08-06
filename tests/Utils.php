@@ -17,6 +17,10 @@ class Utils extends WebTestCase
 
     protected $entityManager;
 
+    /**
+     * Create the database | Create tables | Load Fixture
+     * Create client | Get container | Get entityManager
+     */
     protected function setUp()
     {
         self::runCommand('doctrine:database:create');
@@ -28,6 +32,13 @@ class Utils extends WebTestCase
         $this->entityManager = self::$container->get('doctrine')->getManager();
     }
 
+    /**
+     * Run console command line
+     *
+     * @param string $command
+     * 
+     * @return Int 0 if if everything went fine
+     */
     protected static function runCommand($command)
     {
         $command = sprintf('%s --quiet', $command);
@@ -35,6 +46,11 @@ class Utils extends WebTestCase
         return self::getApplication()->run(new StringInput($command));
     }
 
+    /**
+     * Get Application
+     *
+     * @return Application
+     */
     protected static function getApplication()
     {
         $client = static::createClient();
@@ -44,7 +60,9 @@ class Utils extends WebTestCase
         return self::$application;
     }
 
-    // Log in with ROLE_USER
+    /**
+     * Log in with ROLE_USER
+     */
     protected function createUserClient()
     {
         $this->client->followRedirects();
@@ -60,7 +78,9 @@ class Utils extends WebTestCase
         return $crawler;
     }
 
-    // Log in with ROLE_ADMIN
+    /**
+     * Log in with ROLE_ADMIN
+     */
     protected function createAdminClient()
     {
         $this->client->followRedirects();
@@ -76,7 +96,9 @@ class Utils extends WebTestCase
         return $crawler;
     }
 
-    // Log in with ROLE_SUPER_ADMIN
+    /**
+     * Log in with ROLE_SUPER_ADMIN
+     */
     protected function createSuperAdminClient()
     {
         $this->client->followRedirects();
@@ -92,7 +114,9 @@ class Utils extends WebTestCase
         return $crawler;
     }
 
-
+    /**
+     * Drop database
+     */
     protected function tearDown()
     {
         self::runCommand('doctrine:database:drop --force');

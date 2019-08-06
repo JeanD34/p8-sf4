@@ -38,7 +38,7 @@ class UserVoter extends Voter
                 if ($user === $subject) {
                     return true;
                 }
-                return $this->roleHelper->roleInferior($user->getRoles(), $subject->getRoles());
+                return $this->roleHelper->roleSuperior($user->getRoles(), $subject->getRoles());
                 break;
             case 'DELETE':
                 if ($user !== $subject && $this->security->isGranted('ROLE_SUPER_ADMIN')) {

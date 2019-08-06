@@ -315,6 +315,9 @@ class TaskControllerTest extends Utils
         static::assertNull($task);
     }
 
+    /**
+     * Test of unused (Symfony native) function of Task Entity
+     */
     public function testTaskEntityFunction()
     {
         // Get task from DB

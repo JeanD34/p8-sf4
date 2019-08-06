@@ -14,7 +14,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class TaskController extends AbstractController
 {
     /**
+     * List not done task
+     *
      * @Route("/tasks", name="task_list")
+     * 
+     * @param TaskRepository $taskRepository
+     * 
+     * @return Response
      */
     public function listAction(TaskRepository $taskRepository)
     {
@@ -22,7 +28,13 @@ class TaskController extends AbstractController
     }
 
     /**
+     * List done task
+     *
      * @Route("/tasks/done", name="task_list_done")
+     * 
+     * @param TaskRepository $taskRepository
+     * 
+     * @return Response
      */
     public function listDoneAction(TaskRepository $taskRepository)
     {
@@ -30,7 +42,13 @@ class TaskController extends AbstractController
     }
 
     /**
+     * Show one task
+     *
      * @Route("/tasks/{id}/show", name="task_show")
+     * 
+     * @param Task $task
+     * 
+     * @return Response
      */
     public function showAction(Task $task)
     {
@@ -39,10 +57,13 @@ class TaskController extends AbstractController
 
     /**
      * Task creation
+     * 
      * @Route("/tasks/create", name="task_create")
+     * 
      * @param Request $request
      * @param EntityManagerInterface $manager
-     * @return void
+     * 
+     * @return Response
      */
     public function createAction(Request $request, EntityManagerInterface $manager)
     {
@@ -66,7 +87,15 @@ class TaskController extends AbstractController
     }
 
     /**
+     * Task Edition
+     *
      * @Route("/tasks/{id}/edit", name="task_edit")
+     * 
+     * @param Task $task
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * 
+     * @return Response
      */
     public function editAction(Task $task, Request $request, EntityManagerInterface $manager)
     {
@@ -89,7 +118,14 @@ class TaskController extends AbstractController
     }
 
     /**
+     * Mark task as done or not done
+     *
      * @Route("/tasks/{id}/toggle", name="task_toggle")
+     * 
+     * @param Task $task
+     * @param EntityManagerInterface $manager
+     * 
+     * @return Response
      */
     public function toggleTaskAction(Task $task, EntityManagerInterface $manager)
     {
@@ -102,8 +138,15 @@ class TaskController extends AbstractController
     }
 
     /**
+     * Task deletion
+     *
      * @Route("/tasks/{id}/delete", name="task_delete")
      * @Security("is_granted('DELETE', task)")
+     * 
+     * @param Task $task
+     * @param EntityManagerInterface $manager
+     * 
+     * @return Response
      */
     public function deleteTaskAction(Task $task, EntityManagerInterface $manager)
     {
