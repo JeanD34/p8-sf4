@@ -21,7 +21,7 @@ class UserVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        return in_array($attribute, ['EDIT', 'DELETE'])
+        return in_array($attribute, ['EDIT', 'EDIT_ROLE', 'DELETE'])
             && $subject instanceof \App\Entity\User;
     }
 
@@ -39,6 +39,11 @@ class UserVoter extends Voter
                     return true;
                 }
                 return $this->roleHelper->roleSuperior($user->getRoles(), $subject->getRoles());
+                break;
+            case 'EDIT_ROLE':
+                if ($user !== $subject && $this->roleHelper->roleSuperior($user->getRoles(), $subject->getRoles())) {
+                    return true;
+                }
                 break;
             case 'DELETE':
                 if ($user !== $subject && $this->security->isGranted('ROLE_SUPER_ADMIN')) {
