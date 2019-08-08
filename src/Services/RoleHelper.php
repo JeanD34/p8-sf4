@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Routing\RequestContext;
 
 class RoleHelper
 {
@@ -17,12 +18,12 @@ class RoleHelper
      * Return true if current user role is superior to the user he wants to edit
      *
      * @param array $currentUserRole An array with roles of the current user
-     * @param array $userToEditRole An array with roles of the user to edit
-     * @return void
+     * @param array $userToEditRole An array with roles of the subject to edit
+     * 
+     * @return boolean
      */
-    public function roleSuperior($currentUserRole, $userToEditRole)
+    public function roleSuperior($currentUserRole, $subjectRole)
     {
-
         $roles = $this->getAllRoles();
 
         // Example with the two users being Admin
@@ -31,13 +32,13 @@ class RoleHelper
         // $roles[end($userToEditRole)] = $roles["ROLE_ADMIN"] = 1 (See line 49)
         // Return false an user can only edit user with inferior ROLE               
 
-        return $roles[end($currentUserRole)] > $roles[end($userToEditRole)];
+        return $roles[end($currentUserRole)] > $roles[end($subjectRole)];
     }
 
     /**
      * Get all roles, formatted in an array
      *
-     * @return void
+     * @return array
      */
     public function getAllRoles()
     {

@@ -50,6 +50,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="json")
+     * @Assert\Choice(callback="getAuthorizedRoles")
      */
     private $roles = [];
 
@@ -119,12 +120,7 @@ class User implements UserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-
-        // guarantee every user at least has ROLE_USER in first place in role array
-        array_unshift($roles, 'ROLE_USER');
-
-        return array_unique($roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): self
@@ -195,5 +191,10 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    public static function getAuthorizedRoles()
+    {
+        return [['ROLE_USER'], ['ROLE_ADMIN']];
     }
 }

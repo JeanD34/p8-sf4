@@ -33,7 +33,7 @@ class UserControllerTest extends Utils
         static::assertNotContains('SuperAdmin', $tds);
     }
 
-    public function testCreateAction()
+    public function testCreateUserAction()
     {
         $crawler = $this::createAdminClient();
 
@@ -44,11 +44,12 @@ class UserControllerTest extends Utils
         // Add user with form
         $form = $crawler->selectButton('Ajouter')->form();
 
-        $form['user[username]'] = 'UserTest';
-        $form['user[password][first]'] = 'UserTest34!';
-        $form['user[password][second]'] = 'UserTest34!';
-        $form['user[email]'] = 'user-test@gmail.com';
-        $form['user[roles][0]']->select('ROLE_USER');
+        $form['create_user[username]'] = 'UserTest';
+        $form['create_user[password][first]'] = 'UserTest34!';
+        $form['create_user[password][second]'] = 'UserTest34!';
+        $form['create_user[email]'] = 'user-test@gmail.com';
+        $values = $form['create_user[roles]']->availableOptionValues();
+        $form['create_user[roles]']->setValue($values[0]);
 
         $crawler = $this->client->submit($form);
         static::assertResponseIsSuccessful();
@@ -92,7 +93,8 @@ class UserControllerTest extends Utils
         $form['user[password][first]'] = 'User340!';
         $form['user[password][second]'] = 'User340!';
         $form['user[email]'] = 'user-update@gmail.com';
-        $form['user[roles][0]']->select('ROLE_USER');
+        $values = $form['user[roles]']->availableOptionValues();
+        $form['user[roles]']->setValue($values[0]);
 
         $crawler = $this->client->submit($form);
         static::assertResponseIsSuccessful();
@@ -110,6 +112,30 @@ class UserControllerTest extends Utils
         static::assertSame('UserUpdate', $user->getUsername());
         static::assertSame('user-update@gmail.com', $user->getEmail());
         static::assertSame(array('ROLE_USER'), $user->getRoles());
+    }
+
+    /**
+     * The purpose is to assert that role field is not available when user === subject
+     */
+    public function testEditRoleSuperAdminBeingSuperAdmin()
+    {
+        $crawler = $this::createSuperAdminClient();
+
+        // Go to Admin edition page
+        $crawler = $this->client->request('GET', '/users/2/edit');
+        static::assertResponseIsSuccessful();
+
+        // Assert role is available editing user with inferior role
+        static::assertSelectorTextSame('#user_roles > div:nth-child(1) > label[for=user_roles_0]', 'Utilisateur');
+        static::assertSelectorTextSame('#user_roles > div:nth-child(2) > label[for=user_roles_1]', 'Administrateur');
+
+        // Go to SuperAdmin edition page
+        $crawler = $this->client->request('GET', '/users/1/edit');
+        static::assertResponseIsSuccessful();
+
+        // Assert role is not available editing himself
+        static::assertSelectorNotExists('#user_roles > div:nth-child(1) > label[for=user_roles_0]');
+        static::assertSelectorNotExists('#user_roles > div:nth-child(2) > label[for=user_roles_1]');
     }
 
     public function testEditActionRoleUser()

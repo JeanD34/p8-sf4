@@ -12,17 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class UserType extends AbstractType
+class CreateUserType extends AbstractType
 {
-    private $authorization;
-
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
-    {
-        $this->authorization = $authorizationChecker;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -34,9 +26,8 @@ class UserType extends AbstractType
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
             ])
-            ->add('email', EmailType::class, ['label' => 'Adresse email']);
-        if ($this->authorization->isGranted('ROLE_EDITION', $options['data'])) {
-            $builder->add('roles', ChoiceType::class, [
+            ->add('email', EmailType::class, ['label' => 'Adresse email'])
+            ->add('roles', ChoiceType::class, [
                 'label' => 'Rôle',
                 'choices' => [
                     'Utilisateur' => 'ROLE_USER',
@@ -44,19 +35,19 @@ class UserType extends AbstractType
                 ],
                 'expanded' => true,
             ]);
-            $builder->get('roles')
-                ->addModelTransformer(new CallbackTransformer(
-                    function ($rolesAsArray) {
-                        // transform the array to a string
-                        return implode(', ', $rolesAsArray);
-                    },
-                    function ($rolesAsString) {
-                        // transform the string back to an array
-                        return explode(', ', $rolesAsString);
-                    }
-                ));
-        }
+        $builder->get('roles')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($rolesAsArray) {
+                    // transform the array to a string
+                    return implode(', ', $rolesAsArray);
+                },
+                function ($rolesAsString) {
+                    // transform the string back to an array
+                    return explode(', ', $rolesAsString);
+                }
+            ));
     }
+
 
     public function configureOptions(OptionsResolver $resolver)
     {
