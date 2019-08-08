@@ -39,8 +39,9 @@ class DeleteTaskVoter extends Voter
                 if ($user === $subject->getUser()) {
                     return true;
                 }
-                if ($this->security->isGranted('ROLE_ADMIN') && $subject->getUser()->getUsername() == 'UserAnon')
+                if ($this->security->isGranted('ROLE_ADMIN') && $subject->getUser()->getUsername() == 'UserAnon') {
                     return true;
+                }
                 break;
         }
 
