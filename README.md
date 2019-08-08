@@ -80,4 +80,4 @@ phpunit.xml.dist
 
 ## Contributing
 
-To contribute see CONTRIBUTING.md
+To contribute see [CONTRIBUTING.md](https://github.com/JeanD34/p8-sf4/blob/master/CONTRIBUTING.md)

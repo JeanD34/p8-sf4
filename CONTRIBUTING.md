@@ -6,7 +6,7 @@ To contribute follow this guide.
 
 ## Guideline
 
-1 - Install the project following README.md 
+1 - Install the project following [README.md](https://github.com/JeanD34/p8-sf4/blob/master/README.md) 
 
 2 - Create new branch and work on it
 
