@@ -4,12 +4,11 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Form\CreateUserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -67,7 +66,7 @@ class UserController extends AbstractController
      * User edition
      *
      * @Route("/users/{id}/edit", name="user_edit")
-     * @Security("is_granted('EDIT', userToEdit)")
+     * @IsGranted("EDIT", subject="userToEdit")
      * 
      * @param User $userToEdit
      * @param Request $request
@@ -100,7 +99,7 @@ class UserController extends AbstractController
      * User deletion
      * 
      * @Route("/users/{id}/delete", name="user_delete")
-     * @Security("is_granted('DELETE', userToDelete)")
+     * @IsGranted("DELETE", subject="userToDelete")
      * 
      * @param EntityManagerInterface $manager
      * @param User $userToDelete

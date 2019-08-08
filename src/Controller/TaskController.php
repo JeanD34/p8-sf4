@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class TaskController extends AbstractController
 {
@@ -141,7 +141,7 @@ class TaskController extends AbstractController
      * Task deletion
      *
      * @Route("/tasks/{id}/delete", name="task_delete")
-     * @Security("is_granted('DELETE', task)")
+     * @IsGranted("DELETE", subject="task")
      * 
      * @param Task $task
      * @param EntityManagerInterface $manager
