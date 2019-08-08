@@ -29,6 +29,7 @@
             <directory>src/Form</directory>
             <directory>src/DataFixtures</directory>
             <directory>src/Security/Voter</directory>
+            <directory>src/Services</directory>
         </whitelist>
     </filter>
 

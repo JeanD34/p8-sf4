@@ -44,12 +44,12 @@ class UserControllerTest extends Utils
         // Add user with form
         $form = $crawler->selectButton('Ajouter')->form();
 
-        $form['create_user[username]'] = 'UserTest';
-        $form['create_user[password][first]'] = 'UserTest34!';
-        $form['create_user[password][second]'] = 'UserTest34!';
-        $form['create_user[email]'] = 'user-test@gmail.com';
-        $values = $form['create_user[roles]']->availableOptionValues();
-        $form['create_user[roles]']->setValue($values[0]);
+        $form['user[username]'] = 'UserTest';
+        $form['user[password][first]'] = 'UserTest34!';
+        $form['user[password][second]'] = 'UserTest34!';
+        $form['user[email]'] = 'user-test@gmail.com';
+        $values = $form['user[roles]']->availableOptionValues();
+        $form['user[roles]']->setValue($values[0]);
 
         $crawler = $this->client->submit($form);
         static::assertResponseIsSuccessful();

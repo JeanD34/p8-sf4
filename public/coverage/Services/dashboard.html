@@ -2,7 +2,7 @@
 <html lang="en">
  <head>
   <meta charset="UTF-8">
-  <title>Dashboard for C:\wamp64\www\to-do-list-sf4\src/DataFixtures</title>
+  <title>Dashboard for C:\wamp64\www\to-do-list-sf4\src/Services</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="../.css/bootstrap.min.css" rel="stylesheet" type="text/css">
   <link href="../.css/nv.d3.min.css" rel="stylesheet" type="text/css">
@@ -19,7 +19,7 @@
      <div class="col-md-12">
       <ol class="breadcrumb">
         <li><a href="../index.html">C:\wamp64\www\to-do-list-sf4\src</a></li>
-        <li><a href="index.html">DataFixtures</a></li>
+        <li><a href="index.html">Services</a></li>
         <li class="active">(Dashboard)</li>
 
       </ol>
@@ -158,7 +158,7 @@ $(document).ready(function() {
       .yAxis.tickFormat(d3.format('d'));
 
     d3.select('#classCoverageDistribution svg')
-      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,0,0,2], "Class Coverage"))
+      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,0,0,1], "Class Coverage"))
       .transition().duration(500).call(chart);
 
     nv.utils.windowResize(chart.update);
@@ -176,7 +176,7 @@ $(document).ready(function() {
       .yAxis.tickFormat(d3.format('d'));
 
     d3.select('#methodCoverageDistribution svg')
-      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,0,0,4], "Method Coverage"))
+      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,0,0,3], "Method Coverage"))
       .transition().duration(500).call(chart);
 
     nv.utils.windowResize(chart.update);
@@ -226,7 +226,7 @@ $(document).ready(function() {
     chart.yAxis.axisLabel('Cyclomatic Complexity');
 
     d3.select('#classComplexity svg')
-      .datum(getComplexityData([[100,8,"<a href=\"TaskFixtures.php.html#11\">App\\DataFixtures\\TaskFixtures<\/a>"],[100,2,"<a href=\"UserFixtures.php.html#10\">App\\DataFixtures\\UserFixtures<\/a>"]], 'Class Complexity'))
+      .datum(getComplexityData([[100,7,"<a href=\"RoleHelper.php.html#8\">App\\Services\\RoleHelper<\/a>"]], 'Class Complexity'))
       .transition()
       .duration(500)
       .call(chart);
@@ -250,7 +250,7 @@ $(document).ready(function() {
     chart.yAxis.axisLabel('Method Complexity');
 
     d3.select('#methodComplexity svg')
-      .datum(getComplexityData([[100,7,"<a href=\"TaskFixtures.php.html#13\">App\\DataFixtures\\TaskFixtures::load<\/a>"],[100,1,"<a href=\"TaskFixtures.php.html#78\">App\\DataFixtures\\TaskFixtures::getDependencies<\/a>"],[100,1,"<a href=\"UserFixtures.php.html#19\">App\\DataFixtures\\UserFixtures::__construct<\/a>"],[100,1,"<a href=\"UserFixtures.php.html#24\">App\\DataFixtures\\UserFixtures::load<\/a>"]], 'Method Complexity'))
+      .datum(getComplexityData([[100,1,"<a href=\"RoleHelper.php.html#12\">App\\Services\\RoleHelper::__construct<\/a>"],[100,2,"<a href=\"RoleHelper.php.html#26\">App\\Services\\RoleHelper::roleSuperior<\/a>"],[100,4,"<a href=\"RoleHelper.php.html#49\">App\\Services\\RoleHelper::getAllRoles<\/a>"]], 'Method Complexity'))
       .transition()
       .duration(500)
       .call(chart);

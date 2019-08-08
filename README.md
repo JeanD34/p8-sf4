@@ -78,3 +78,6 @@ phpunit.xml.dist
 
 ```php bin/phpunit```
 
+## Contributing
+
+To contribute see CONTRIBUTING.md

@@ -43,7 +43,7 @@ class UserController extends AbstractController
     public function createAction(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
-        $form = $this->createForm(CreateUserType::class, $user);
+        $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
